@@ -1,6 +1,6 @@
 (function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))a(e);new MutationObserver(e=>{for(const l of e)if(l.type==="childList")for(const i of l.addedNodes)i.tagName==="LINK"&&i.rel==="modulepreload"&&a(i)}).observe(document,{childList:!0,subtree:!0});function s(e){const l={};return e.integrity&&(l.integrity=e.integrity),e.referrerPolicy&&(l.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?l.credentials="include":e.crossOrigin==="anonymous"?l.credentials="omit":l.credentials="same-origin",l}function a(e){if(e.ep)return;e.ep=!0;const l=s(e);fetch(e.href,l)}})();class r{constructor(){this.currentIndex=0,this.slides=[],this.totalSlides=0,this.viewport=document.getElementById("ppt-viewport"),this.prevBtn=document.getElementById("prevBtn"),this.nextBtn=document.getElementById("nextBtn"),this.progressBarFill=document.getElementById("progressBarFill"),this.pageIndicator=document.getElementById("pageIndicator"),this.init(),this.initWindowMessage()}init(){this.loadSlides(),this.bindEvents(),this.initializePage(),this.updateUI(),this.updateViewportScale()}initWindowMessage(){window.addEventListener("message",t=>{if(!t.data||typeof t.data!="object")return;const{type:s,data:a}=t.data;s==="childrenstart"?(this.prevBtn.style.visibility="hidden",this.nextBtn.style.visibility="hidden",this.progressBarFill.style.visibility="hidden",this.pageIndicator.style.visibility="hidden"):s==="childrenstop"&&(this.prevBtn.style.visibility="visible",this.nextBtn.style.visibility="visible",this.progressBarFill.style.visibility="visible",this.pageIndicator.style.visibility="visible")})}initializePage(){const t=new URLSearchParams(window.location.search);let s=t.get("page");if(!s){s="1",t.set("page","1");const l=`${window.location.pathname}?${t.toString()}`;window.history.replaceState({},"",l)}const a=parseInt(s,10),e=a-1;if(!isNaN(a)&&e>=0&&e<this.totalSlides)this.slides[0]&&this.slides[0].classList.remove("active"),this.currentIndex=e,this.slides[e]&&this.slides[e].classList.add("active");else{console.warn(`无效的页码参数: ${s}，将显示第 1 页`),t.set("page","1");const l=`${window.location.pathname}?${t.toString()}`;window.history.replaceState({},"",l)}}loadSlides(){if(typeof window.slideDataMap>"u"){console.error("未找到 slideDataMap");return}const t=Array.from(window.slideDataMap.keys()).sort((s,a)=>s-a);if(this.totalSlides=t.length,this.totalSlides===0){console.warn("slideDataMap 为空，没有幻灯片可加载");return}t.forEach((s,a)=>{const e=document.createElement("div");e.className="slide",a===0&&e.classList.add("active");const l=window.slideDataMap.get(s);if(!l||typeof l!="string"){this.totalSlides--,console.error(`未找到页码 ${s} 的内容, 或者页码 ${s} 的内容为空`);return}const i=document.createElement("div");i.innerHTML=l.trim(),e.appendChild(i),this.viewport.appendChild(e),this.slides.push(e)})}bindEvents(){this.prevBtn.addEventListener("click",()=>this.prevSlide()),this.nextBtn.addEventListener("click",()=>this.nextSlide()),document.addEventListener("keydown",s=>{s.key==="ArrowLeft"?this.prevSlide():s.key==="ArrowRight"||s.key===" "?(s.preventDefault(),this.nextSlide()):s.key==="Home"?this.goToSlide(0):s.key==="End"&&this.goToSlide(this.totalSlides-1)});let t=0;this.viewport.addEventListener("touchstart",s=>{t=s.touches[0].clientX}),this.viewport.addEventListener("touchend",s=>{const a=s.changedTouches[0].clientX,e=t-a;Math.abs(e)>50&&(e>0?this.nextSlide():this.prevSlide())}),window.addEventListener("resize",()=>this.updateViewportScale())}prevSlide(){this.currentIndex>0&&this.goToSlide(this.currentIndex-1)}nextSlide(){this.currentIndex<this.totalSlides-1&&this.goToSlide(this.currentIndex+1)}goToSlide(t){t<0||t>=this.totalSlides||(this.slides[this.currentIndex].classList.remove("active"),this.currentIndex=t,this.slides[this.currentIndex].classList.add("active"),this.updateUrlPage(t+1),this.updateUI())}updateUrlPage(t){const s=new URLSearchParams(window.location.search);s.set("page",t.toString());const a=`${window.location.pathname}?${s.toString()}`;window.history.replaceState({},"",a)}updateUI(){if(this.totalSlides===0){this.prevBtn.disabled=!0,this.nextBtn.disabled=!0,this.progressBarFill.style.width="0%",this.pageIndicator.textContent="制作中";return}this.prevBtn.disabled=this.currentIndex===0,this.nextBtn.disabled=this.currentIndex===this.totalSlides-1;const t=(this.currentIndex+1)/this.totalSlides*100;this.progressBarFill.style.width=`${t}%`,this.pageIndicator.textContent=`${this.currentIndex+1} / ${this.totalSlides}`}updateViewportScale(){const e=window.innerWidth-40,l=window.innerHeight-40,i=e/1440,n=l/810,d=Math.min(i,n,1);this.viewport.style.transform=`scale(${d})`,console.log(`窗口: ${window.innerWidth}x${window.innerHeight}, 缩放: ${d.toFixed(3)}`)}}class x{constructor(){this.validRoutes=["/","/index.html"],this.checkRoute()}checkRoute(){const t=window.location.pathname;if(t.includes("404.html"))return;this.validRoutes.some(a=>a==="/"?t==="/"||t==="/index.html":t===a)||(console.warn(`Invalid route detected: ${t}, redirecting to 404`),window.location.href="/404.html")}addRoute(t){this.validRoutes.includes(t)||this.validRoutes.push(t)}isValidRoute(t){return this.validRoutes.includes(t)}}window.addEventListener("DOMContentLoaded",()=>{new x,new r});window.slideDataMap.set(1,`
 <div class="w-[1440px] h-[810px] shadow-2xl relative overflow-hidden bg-black flex items-center justify-center">
-  <img src="/assets/images/cover-roles-evolve.jpg" alt="LOVEVOOK KOL Brief Cover" class="h-full w-auto object-contain" style="max-width:100%; max-height:100%;">
+  <img src="./assets/images/cover-roles-evolve.jpg" alt="LOVEVOOK KOL Brief Cover" class="h-full w-auto object-contain" style="max-width:100%; max-height:100%;">
 </div>
 `);window.slideDataMap.set(2,`
 <div class="w-[1440px] h-[810px] shadow-2xl relative overflow-hidden slide-bg flex items-center justify-center">
@@ -210,7 +210,7 @@
       <!-- Product 5576 -->
       <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
         <div class="h-[200px] bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center p-4">
-          <img src="/assets/images/product-5576-overview.png" alt="5576" class="max-h-[180px] object-contain rounded-lg" onerror="this.style.display='none'" />
+          <img src="./assets/images/product-5576-overview.png" alt="5576" class="max-h-[180px] object-contain rounded-lg" onerror="this.style.display='none'" />
         </div>
         <div class="p-5">
           <div class="inline-block px-3 py-1 bg-[#F7941D] text-white text-xs font-bold rounded-full mb-3" style="font-family:'Montserrat'">5576</div>
@@ -228,7 +228,7 @@
       <!-- Product 5595 -->
       <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
         <div class="h-[200px] bg-gradient-to-br from-stone-100 to-amber-50 flex items-center justify-center p-4">
-          <img src="/assets/images/product-5595-overview.jpg" alt="5595" class="max-h-[180px] object-contain rounded-lg" onerror="this.style.display='none'" />
+          <img src="./assets/images/product-5595-overview.jpg" alt="5595" class="max-h-[180px] object-contain rounded-lg" onerror="this.style.display='none'" />
         </div>
         <div class="p-5">
           <div class="inline-block px-3 py-1 bg-gray-800 text-white text-xs font-bold rounded-full mb-3" style="font-family:'Montserrat'">5595</div>
@@ -246,7 +246,7 @@
       <!-- Product 5701 -->
       <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
         <div class="h-[200px] bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center p-4">
-          <img src="/assets/images/product-5701-overview.jpg" alt="5701" class="max-h-[180px] object-contain rounded-lg" onerror="this.style.display='none'" />
+          <img src="./assets/images/product-5701-overview.jpg" alt="5701" class="max-h-[180px] object-contain rounded-lg" onerror="this.style.display='none'" />
         </div>
         <div class="p-5">
           <div class="inline-block px-3 py-1 bg-black text-white text-xs font-bold rounded-full mb-3" style="font-family:'Montserrat'">5701</div>
@@ -270,7 +270,7 @@
   <div class="w-[1400px] h-[780px] mx-auto my-[15px] flex gap-6 px-2">
     <!-- Left: Product Image -->
     <div class="w-[40%] flex items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50 rounded-2xl p-6">
-      <img src="/assets/images/product-5576-new.png" alt="5576" class="max-h-[640px] w-full object-contain rounded-xl drop-shadow-lg" onerror="this.style.display='none'" />
+      <img src="./assets/images/product-5576-new.png" alt="5576" class="max-h-[640px] w-full object-contain rounded-xl drop-shadow-lg" onerror="this.style.display='none'" />
     </div>
 
     <!-- Right: Content -->
@@ -305,7 +305,7 @@
           <!-- 办公室办公 -->
           <div class="flex-1 flex items-center gap-4 min-h-0">
             <div class="w-[40%] h-full rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 shadow-sm flex items-center justify-center">
-              <img src="/assets/images/use-cases/5576-office.jpg" alt="5576 办公室" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>办公室</div>'" />
+              <img src="./assets/images/use-cases/5576-office.jpg" alt="5576 办公室" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>办公室</div>'" />
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-base text-gray-800 mb-1.5">🏢 办公室办公</p>
@@ -315,7 +315,7 @@
           <!-- 差旅出行 -->
           <div class="flex-1 flex items-center gap-4 min-h-0">
             <div class="w-[40%] h-full rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 shadow-sm flex items-center justify-center">
-              <img src="/assets/images/use-cases/5576-airport.png" alt="5576 差旅" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>差旅</div>'" />
+              <img src="./assets/images/use-cases/5576-airport.png" alt="5576 差旅" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>差旅</div>'" />
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-base text-gray-800 mb-1.5">✈️ 差旅出行</p>
@@ -362,7 +362,7 @@
           <!-- 通勤路上 -->
           <div class="flex-1 flex items-center gap-4 min-h-0">
             <div class="w-[40%] h-full rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 shadow-sm flex items-center justify-center">
-              <img src="/assets/images/use-cases/5595-commute.png" alt="5595 通勤" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>通勤</div>'" />
+              <img src="./assets/images/use-cases/5595-commute.png" alt="5595 通勤" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>通勤</div>'" />
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-base text-gray-800 mb-1.5">🚶‍♀️ 通勤路上</p>
@@ -372,7 +372,7 @@
           <!-- 咖啡厅办公 -->
           <div class="flex-1 flex items-center gap-4 min-h-0">
             <div class="w-[40%] h-full rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 shadow-sm flex items-center justify-center">
-              <img src="/assets/images/use-cases/5595-cafe-1.jpg" alt="5595 咖啡厅" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>咖啡厅</div>'" />
+              <img src="./assets/images/use-cases/5595-cafe-1.jpg" alt="5595 咖啡厅" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>咖啡厅</div>'" />
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-base text-gray-800 mb-1.5">☕ 咖啡厅办公</p>
@@ -385,7 +385,7 @@
 
     <!-- Right: Product Image -->
     <div class="w-[40%] flex items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50 rounded-2xl p-6">
-      <img src="/assets/images/product-5595-new.png" alt="5595" class="max-h-[640px] w-full object-contain rounded-xl drop-shadow-lg" onerror="this.style.display='none'" />
+      <img src="./assets/images/product-5595-new.png" alt="5595" class="max-h-[640px] w-full object-contain rounded-xl drop-shadow-lg" onerror="this.style.display='none'" />
     </div>
   </div>
 </div>
@@ -394,7 +394,7 @@
   <div class="w-[1400px] h-[780px] mx-auto my-[15px] flex gap-6 px-2">
     <!-- Left: Product Image -->
     <div class="w-[40%] flex items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50 rounded-2xl p-6">
-      <img src="/assets/images/product-5701-new.png" alt="5701" class="max-h-[640px] w-full object-contain rounded-xl drop-shadow-lg" onerror="this.style.display='none'" />
+      <img src="./assets/images/product-5701-new.png" alt="5701" class="max-h-[640px] w-full object-contain rounded-xl drop-shadow-lg" onerror="this.style.display='none'" />
     </div>
 
     <!-- Right: Content -->
@@ -421,7 +421,7 @@
           <!-- 时尚穿搭 -->
           <div class="flex-1 flex items-center gap-4 min-h-0">
             <div class="w-[40%] h-full rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 shadow-sm flex items-center justify-center">
-              <img src="/assets/images/use-cases/5701-fashion.jpg" alt="5701 时尚穿搭" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>穿搭</div>'" />
+              <img src="./assets/images/use-cases/5701-fashion.jpg" alt="5701 时尚穿搭" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>穿搭</div>'" />
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-base text-gray-800 mb-1.5">👗 时尚穿搭</p>
@@ -431,7 +431,7 @@
           <!-- 日常社交 -->
           <div class="flex-1 flex items-center gap-4 min-h-0">
             <div class="w-[40%] h-full rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 shadow-sm flex items-center justify-center">
-              <img src="/assets/images/use-cases/5701-social.png" alt="5701 日常社交" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>社交</div>'" />
+              <img src="./assets/images/use-cases/5701-social.png" alt="5701 日常社交" class="max-w-full max-h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-400 text-xs\\'>社交</div>'" />
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-base text-gray-800 mb-1.5">👯 日常社交</p>
@@ -480,7 +480,7 @@
           <!-- Reference 1 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/dezbreel-street-interview.png" alt="ref-c1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/dezbreel-street-interview.png" alt="ref-c1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">① 街采搭讪式</p>
@@ -493,7 +493,7 @@
           <!-- Reference 2 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/nnbmdhj-office-bag.png" alt="ref-c2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/nnbmdhj-office-bag.png" alt="ref-c2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">② 特定场景使用</p>
@@ -506,7 +506,7 @@
           <!-- Reference 3 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/michellemennella-boat-reaction.png" alt="ref-c3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/michellemennella-boat-reaction.png" alt="ref-c3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">③ 第三方围观种草</p>
@@ -535,7 +535,7 @@
           <!-- Reference 1 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/sofia-commute-vlog.png" alt="ref-d1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/sofia-commute-vlog.png" alt="ref-d1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">① 完整一天 Vlog</p>
@@ -548,7 +548,7 @@
           <!-- Reference 2 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/oleada-commute-pack.png" alt="ref-d2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/oleada-commute-pack.png" alt="ref-d2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">② 通勤装包+使用场景</p>
@@ -561,7 +561,7 @@
           <!-- Reference 3 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/savinachow-what-in-my-bag.png" alt="ref-d3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/savinachow-what-in-my-bag.png" alt="ref-d3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">③ What's in my bag</p>
@@ -613,7 +613,7 @@
           <!-- Reference 1 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/priricart-ootd.png" alt="ref-a1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/priricart-ootd.png" alt="ref-a1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">① OOTD 场景展示</p>
@@ -626,7 +626,7 @@
           <!-- Reference 2 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/denisseaidaee-transform.png" alt="ref-a2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/denisseaidaee-transform.png" alt="ref-a2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">② 变装对比</p>
@@ -639,7 +639,7 @@
           <!-- Reference 3 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/moiramans-weekly-outfit.png" alt="ref-a3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/moiramans-weekly-outfit.png" alt="ref-a3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">③ 一周穿搭</p>
@@ -668,7 +668,7 @@
           <!-- Reference 1 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/ambersharel-tech-work-bag.png" alt="ref-b1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/ambersharel-tech-work-bag.png" alt="ref-b1" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">① 功能和场景展示</p>
@@ -681,7 +681,7 @@
           <!-- Reference 2 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/user1682910208-unboxing.png" alt="ref-b2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/user1682910208-unboxing.png" alt="ref-b2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">② 惊喜开箱 + 结构展示</p>
@@ -694,7 +694,7 @@
           <!-- Reference 3 -->
           <div class="bg-white rounded-xl p-2 shadow-sm flex gap-3 overflow-hidden" style="height:180px;">
             <div class="w-[170px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-              <img src="/assets/images/ref/instagram-pack-carry-on.png" alt="ref-b3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
+              <img src="./assets/images/ref/instagram-pack-carry-on.png" alt="ref-b3" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">
               <p class="text-sm font-bold text-gray-800">③ Pack My Carry-On With Me</p>
@@ -1044,7 +1044,7 @@
   </div>
 </div>
 `);window.slideDataMap.set(16,`
-<div class="w-[1440px] h-[810px] shadow-2xl relative overflow-hidden" style="background: url('/assets/images/slide-16-bg.jpg') center center / cover no-repeat">
+<div class="w-[1440px] h-[810px] shadow-2xl relative overflow-hidden" style="background: url('./assets/images/slide-16-bg.jpg') center center / cover no-repeat">
   <div class="absolute inset-0 bg-black/40"></div>
   <div class="relative z-10 w-[1350px] h-[720px] mx-auto my-[45px] flex flex-col items-center justify-center text-center">
     <!-- Collection Name -->
